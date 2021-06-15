@@ -1,3 +1,5 @@
+const {baseUrl, prodUrl} = require('./constants.js')
+
 const axios = require('axios');
 const fs = require('fs')
 const random = require('random')
@@ -23,7 +25,7 @@ function generateRandomUsers(){
 }
 
 function postRandomUsers(n){
-    axios.post('http://localhost:8080/api/v1/users', {...users[n]}).then(result => {
+    axios.post(`${prodUrl}/users`, {...users[n]}).then(result => {
         if(n > 0)
             postRandomUsers(n - 1)
     }).catch(err => {
@@ -32,5 +34,4 @@ function postRandomUsers(n){
 }
 
 const users = generateRandomUsers();
-
 postRandomUsers(users.length - 1)

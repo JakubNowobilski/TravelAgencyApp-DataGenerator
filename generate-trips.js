@@ -1,3 +1,5 @@
+const {baseUrl, prodUrl} = require('./constants.js')
+
 const axios = require('axios');
 const fs = require('fs')
 const random = require('random')
@@ -35,7 +37,7 @@ function generateRandomTrips(){
 }
 
 function postRandomTrips(n){
-    axios.post('http://localhost:8080/api/v1/trips', {...trips[n]}).then(result => {
+    axios.post(`${prodUrl}/trips`, {...trips[n]}).then(result => {
         if(n > 0)
             postRandomTrips(n - 1)
     }).catch(err => {
@@ -44,5 +46,5 @@ function postRandomTrips(n){
 }
 
 const trips = generateRandomTrips();
-
+console.log(trips)
 postRandomTrips(trips.length - 1)

@@ -1,8 +1,10 @@
+const {baseUrl, prodUrl} = require('./constants.js')
+
 const axios = require('axios');
 const fs = require('fs')
 const random = require('random')
 
-function generateRandomParticipants(n = 10){
+function generateRandomParticipants(n){
     let participants = []
     let firstNames = fs.readFileSync('./participant/firstNames.txt', 'utf8')
     let lastNames = fs.readFileSync('./participant/lastNames.txt', 'utf8')
@@ -20,14 +22,40 @@ function generateRandomParticipants(n = 10){
     return participants;
 }
 
-function postRandomParticipants(n){
-    axios.post('http://localhost:8080/api/v1/participants?id=someID', {...participants[n]}).then(result => {
+function postRandomParticipants(n, participants, reservation){
+    if(n < 0)
+        return new Promise(resolve => {resolve("Continue")})
+    return axios.post(`${baseUrl}/participants?reservationId=${reservation.id}`, {...participants[n]}).then(result => {
         if(n > 0)
-            postRandomParticipants(n - 1)
+            return postRandomParticipants(n - 1, participants, reservation)
     }).catch(err => {
-        console.log(err)
+        console.log(err.response.data)
     })
 }
 
-const participants = generateRandomParticipants();
-console.log(participants)
+function fetchData(){
+    return axios.get(`${baseUrl}/reservations`)
+        .then(res => res.data)
+        .catch(err => undefined)
+}
+
+fetchData().then(res => {
+    const allReservations = res;
+    console.log("Reservations fetched")
+    for (let i = 0; i < allReservations.length; i++){
+        const isPaid = (random.int(0, 1) === 1);
+        const reservation = allReservations[i];
+        const n = isPaid ? reservation.numberOfParticipants : random.int(0, reservation.numberOfParticipants - 1)
+        const participants = generateRandomParticipants(n)
+        postRandomParticipants(n - 1, participants, reservation).then(res => {
+            if(n === reservation.numberOfParticipants){
+                axios.put(`${baseUrl}/reservations/${reservation.id}/changeStatus?status=P`)
+                    .then(res => {})
+                    .catch(err => { console.log(err); })
+            }
+        })
+    }
+})
+
+// const participants = generateRandomParticipants(5);
+// console.log(participants)
