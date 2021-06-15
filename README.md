@@ -9,5 +9,5 @@ Documentation of this project is available [here](https://github.com/kaspiotr/Tr
 This data generator is written in Node.js and uses [axios](https://github.com/axios/axios) library.
 
 ## Authors
-Jakub Nowobilski  
-Piotr Kasprzyk
+Jakub Nowobilski (jakubnow@student.agh.edu.pl)  
+Piotr Kasprzyk (pkasprzyk@student.agh.edu.pl)
