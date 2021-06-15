@@ -6,6 +6,8 @@ This project is used to populate a database, hosted on Heroku
 with data that are used by Travel Agency App available [here](https://github.com/kaspiotr/TravelAgencyApp/tree/develop).  
 Documentation of this project is available [here](https://github.com/kaspiotr/TravelAgencyApp/tree/develop).
 
+This data generator in written in Node.js and uses [axios](https://github.com/axios/axios) library.
+
 ## Authors
 Jakub Nowobilski  
 Piotr Kasprzyk
